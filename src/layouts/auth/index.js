@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import routes from "routes.js";
 
@@ -7,6 +7,7 @@ import { Box, useColorModeValue } from "@chakra-ui/react";
 
 // Layout components
 import { SidebarContext } from "contexts/SidebarContext";
+import { hash } from "stylis";
 
 // Custom Chakra theme
 export default function Auth() {
@@ -37,6 +38,12 @@ export default function Auth() {
       }
     });
   };
+  const hasJWT = () => {
+    let flag = false;
+    localStorage.getItem("token") ? flag = true : flag = false
+    return flag
+  }
+
   const authBg = useColorModeValue("white", "navy.900");
   document.documentElement.dir = "ltr";
   return (
@@ -60,7 +67,9 @@ export default function Auth() {
           {getRoute() ? (
             <Box mx='auto' minH='100vh'>
               <Switch>
-                {getRoutes(routes)}
+                {
+                  hasJWT() ? <Redirect to="/admin" /> : getRoutes(routes)
+                }
                 <Redirect
                   from='/auth'
                   to='/auth/sign-in/default
